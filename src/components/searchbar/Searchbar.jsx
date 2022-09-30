@@ -27,6 +27,8 @@ export default class Searchbar extends Component {
     this.setState({inputValue: ''})
     console.log(this.state.inputValue)
   }
+
+
     
 render() {
 

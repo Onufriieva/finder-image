@@ -1,13 +1,11 @@
 import React, {Component} from "react";
-// import {ReactComponent as Loop} from '../../svg/loop.svg'
 import Modal from "components/modal/Modal";
 import ImageGallery from "components/imageGallery/ImageGallery";
 import Searchbar from "components/searchbar/Searchbar";
 import Loader from "components/loader/Loader";
-import axios from 'axios';
 import { StyledApp } from "./AppStyled";
 import Button from "components/button/Button";
-
+import { fetchImages } from "components/api/fetch";
 
 
 export class App extends Component {
@@ -23,29 +21,18 @@ state = {
 
   componentDidUpdate(__, prevState) {
     const { inputValue, currentPage } = this.state;
-    if (prevState.inputValue !== inputValue || prevState.currentPage !== currentPage) {
+    if (prevState.inputValue !== inputValue ) {
       this.setState({loading: true})
 
-      this.fetchImages()
+      fetchImages(inputValue, currentPage).then(images =>
+        this.setState({ images, 
+          currentPage: currentPage + 1, 
+          loading: false })
+      );
+
     };  
   };
 
-
-  fetchImages = () => {
-    const { inputValue, currentPage } = this.state;
-      axios.get(
-        `https://pixabay.com/api/?q=${inputValue}&page=${currentPage}
-        &key=29221253-dd17a46566e1be23f7ca8ff9b&image_type=photo&orientation=horizontal&per_page=12`
-      )
-      .then(response => { 
-        this.setState(({ images }) => {
-          return {images: [...images, ...response.data.hits]}
-        }
-      ) })
-     .catch(error => this.setState({ error: error }))
-     .finally(() => this.setState({ loading: false })) 
-  };
-   
  
   formSubmit = inputValue => {
     this.setState({inputValue: inputValue})
@@ -60,13 +47,18 @@ state = {
     )
   }
 
+
+
   loadMore = () => {
-    this.setState(({currentPage}) => {
-        return {
-          currentPage: currentPage + 1
-        }
-    })
-  }
+    const { inputValue, currentPage } = this.state;
+
+    fetchImages(inputValue, currentPage).then(images => {
+      this.setState(prevState => ({
+        images: [...prevState.images, ...images],
+        currentPage: prevState.currentPage + 1,  
+      }));
+    });
+  };
 
   
 
@@ -83,8 +75,9 @@ state = {
 
         {loading && <Loader/>}   
         {error && <p>Error, try again</p>}
+
+        {isImages && <ImageGallery images={images} onClick={this.toggleModal}/>}       
        
-        <ImageGallery images={images} onClick={this.toggleModal}/>
 
         {showModal && <Modal onClose={this.toggleModal}>
          <img src={modalContent} alt="" /> </Modal>}
