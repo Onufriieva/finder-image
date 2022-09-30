@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Component } from 'react';
+import {ReactComponent as Loop} from '../../svg/loop.svg'
 import {SearchbarHeader, SearchForm, SearchFormBtn, SearchFormBtnLabel, SearchFormInput} from './SearchbarStyled'
 
 export default class Searchbar extends Component {
@@ -33,8 +34,8 @@ render() {
   return (
     <SearchbarHeader>
       <SearchForm  onSubmit={this.handleSumbit}>
-        <SearchFormBtn type="submit" >
-          <SearchFormBtnLabel>Search</SearchFormBtnLabel>
+        <SearchFormBtn type="submit" aria-label="Search loop">
+          <Loop />
         </SearchFormBtn>
       <SearchFormInput
         type="text"

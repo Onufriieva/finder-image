@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+// import {ReactComponent as Loop} from '../../svg/loop.svg'
 import Modal from "components/modal/Modal";
 import ImageGallery from "components/imageGallery/ImageGallery";
 import Searchbar from "components/searchbar/Searchbar";
@@ -20,9 +21,9 @@ state = {
   modalContent: '',
 };
 
-  componentDidUpdate(prevProps, prevState) {
-    const { inputValue } = this.state;
-    if (prevState.inputValue !== inputValue) {
+  componentDidUpdate(__, prevState) {
+    const { inputValue, currentPage } = this.state;
+    if (prevState.inputValue !== inputValue || prevState.currentPage !== currentPage) {
       this.setState({loading: true})
 
       this.fetchImages()
@@ -59,26 +60,38 @@ state = {
     )
   }
 
+  loadMore = () => {
+    this.setState(({currentPage}) => {
+        return {
+          currentPage: currentPage + 1
+        }
+    })
+  }
+
   
 
   render() {
 
     const { showModal, loading, error, images, modalContent } = this.state;
+    const isImages = Boolean(images.length);
     return (
 
          <StyledApp>
           <p>{}</p>
        
         <Searchbar onSubmit={this.formSubmit}/>
+
         {loading && <Loader/>}   
         {error && <p>Error, try again</p>}
        
         <ImageGallery images={images} onClick={this.toggleModal}/>
-          {showModal && <Modal onClose={this.toggleModal}>
-          <img src={modalContent} alt="" /> </Modal>}
-        <Button onClick={this.fetchImages}/>
 
-      </StyledApp>
+        {showModal && <Modal onClose={this.toggleModal}>
+         <img src={modalContent} alt="" /> </Modal>}
+
+        {isImages && <Button onClick={this.loadMore}/>}        
+   
+        </StyledApp>
     );
   }
 }
