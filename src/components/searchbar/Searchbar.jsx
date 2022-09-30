@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Component } from 'react';
 import {ReactComponent as Loop} from '../../svg/loop.svg'
-import {SearchbarHeader, SearchForm, SearchFormBtn, SearchFormBtnLabel, SearchFormInput} from './SearchbarStyled'
+import {SearchbarHeader, SearchForm, SearchFormBtn, SearchFormInput} from './SearchbarStyled'
 
 export default class Searchbar extends Component {
   state = {
