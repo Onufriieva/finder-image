@@ -54,5 +54,5 @@ render() {
 
 Searchbar.propTypes = {
     onSubmit: PropTypes.func.isRequired,
-}
+  }
 
